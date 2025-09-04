@@ -64,7 +64,8 @@ export default function App() {
   }, [isSticky, mobileOpen]);
 
   return (
-    <div className="hero min-h-screen h-auto relative flex flex-col">
+    <div className="hero h-[130vh] sm:h-[110vh] md:h-[100vh] relative flex flex-col">
+
       {/* Backgrounds */}
       <div className="hero-bg bg1"></div>
       <div className="hero-bg bg2"></div>
