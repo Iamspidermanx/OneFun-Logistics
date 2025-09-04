@@ -63,7 +63,7 @@ export default function ResponsiveFooter() {
             <h3 className="text-white text-lg sm:text-xl font-semibold mb-3">Contact</h3>
             <p className="text-gray-400">DC, Washington</p>
             <p className="text-gray-400 mt-1">+0 1 234 567 890</p>
-            <a href="mailto:lexinjones47@gmail.com" className="text-gray-400 mt-1 inline-block hover:text-white">lexinjones47@gmail.com</a>
+            <a href="mailto:lexinjones47@gmail.com" className="text-gray-400 mt-1 inline-block hover:text-white">OneFunLogistics@gmail.com</a>
 
             <div className="mt-4 flex items-center gap-3">
               {/* Use icon components or <img> icons for production */}
