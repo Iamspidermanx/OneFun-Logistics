@@ -70,17 +70,21 @@ export default function App() {
       <div className="hero-bg bg2"></div>
       <div className="hero-bg bg3"></div>
       <div className="hero-bg bg4"></div>
-      <div className="hero-overlay"></div>
 
-      {/* Top bar */}
-      <div className="headbg text-white w-full">
+      {/* Overlay (stays under text now) */}
+      <div className="hero-overlay absolute inset-0 bg-black/40 z-10"></div>
+
+      {/* Top bar + Navigation */}
+      <div className="headbg text-white w-full z-50 relative">
         <div className="flex flex-col md:flex-row border-b justify-between px-3 md:px-32">
           <div className="flex flex-wrap items-center gap-2 my-2">
             <i className="pi pi-phone p-1"></i>
             <p className="text-[12px] md:text-[14px]">+000 123 45 6789</p>
             <span className="hidden md:inline px-2">|</span>
             <i className="pi pi-envelope p-1"></i>
-            <p className="text-[12px] md:text-[15px]">OneFunLogistics@gmail.com</p>
+            <p className="text-[12px] md:text-[15px]">
+              OneFunLogistics@gmail.com
+            </p>
           </div>
           <div className="flex gap-3 my-2 text-xs md:text-sm">
             <a href="#"><i className="pi pi-facebook"></i></a>
@@ -206,8 +210,8 @@ export default function App() {
         </div>
       </div>
 
-      {/* Hero Content */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 top-1/3 w-[90vw] max-w-5xl px-4 text-left text-white">
+      {/* Hero Content (above overlay now) */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 top-1/3 w-[90vw] max-w-5xl px-4 text-left text-white z-20">
         <h1 className="uppercase text-sm sm:text-lg md:text-2xl tracking-[5px] mb-2">
           Let's make your life easier
         </h1>
@@ -219,8 +223,8 @@ export default function App() {
         </button>
       </div>
 
-      {/* Features */}
-      <div className="absolute left-1/2 transform -translate-x-1/2 top-[70%] w-[95vw] max-w-5xl flex flex-col sm:flex-row gap-4 sm:gap-10 items-center justify-center">
+      {/* Features (also above overlay) */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 top-[70%] w-[95vw] max-w-5xl flex flex-col sm:flex-row gap-4 sm:gap-10 items-center justify-center z-20">
         {list.map((item, index) => (
           <div
             key={index}
