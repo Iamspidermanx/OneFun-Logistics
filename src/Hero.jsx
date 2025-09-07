@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
 
 export default function App() {
-  const menu = ["Home", "About Us", "Couriers", "News", "Contact"];
+  const menu = ["Home", "About Us", "Couriers", "Delivery"];
   const links = {
     Home: "#",
     "About Us": "#",
     Couriers: "#",
-    News: "#",
-    Contact: "#",
+    Delivery: "#",
   };
   const list = [
     { icon: "pi-car", text: "Last Mile Deliveries" },
@@ -18,18 +19,38 @@ export default function App() {
 
   const [isSticky, setIsSticky] = useState(false);
   const navRef = useRef(null);
-
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
+
+  const [staffSuccess, setStaffSuccess] = useState(false);
+  const SHEET_URL =
+    "https://docs.google.com/spreadsheets/d/1EwwzCx9EmMavzvEAQz8T8-oPnMeoUh7RcKkIyolq2so/edit";
+  const [showStaffLogin, setShowStaffLogin] = useState(false);
+
+  const handleStaffLoginSuccess = (credentialResponse) => {
+    try {
+      const decoded = jwtDecode(credentialResponse.credential);
+      setStaffSuccess(true);
+      setTimeout(() => {
+        window.open(SHEET_URL, "_blank");
+        setShowStaffLogin(false);
+        setStaffSuccess(false);
+      }, 500);
+    } catch (error) {
+      alert("Staff login failed.");
+    }
+  };
+
+  const handleStaffLoginError = () => {
+    alert("Staff login failed.");
+  };
 
   useEffect(() => {
     const measure = () => {
       if (navRef.current) {
-        const rect = navRef.current.getBoundingClientRect();
-        setNavHeight(rect.height);
+        setNavHeight(navRef.current.getBoundingClientRect().height);
       }
     };
-
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
@@ -48,31 +69,23 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => (document.body.style.overflow = "");
   }, [mobileOpen]);
 
   useEffect(() => {
     if (navRef.current) {
-      const rect = navRef.current.getBoundingClientRect();
-      setNavHeight(rect.height);
+      setNavHeight(navRef.current.getBoundingClientRect().height);
     }
   }, [isSticky, mobileOpen]);
 
   return (
-    <div className="hero h-[130vh] sm:h-[110vh] md:h-[100vh] relative flex flex-col">
-
+    <div className="hero h-[150vh] sm:h-[110vh] md:h-[100vh] relative flex flex-col">
       {/* Backgrounds */}
       <div className="hero-bg bg1"></div>
       <div className="hero-bg bg2"></div>
       <div className="hero-bg bg3"></div>
       <div className="hero-bg bg4"></div>
-
-      {/* Overlay (stays under text now) */}
       <div className="hero-overlay absolute inset-0 bg-black/40 z-10"></div>
 
       {/* Top bar + Navigation */}
@@ -153,14 +166,14 @@ export default function App() {
                   {item}
                 </a>
               ))}
-            </nav>
-
-            {/* CTA */}
-            <div className="hidden md:block ml-6">
-              <button className="px-5 py-2 rounded-md bg-amber-300 text-white font-semibold">
-                Contact us
+              {/* Staff Sign In Button */}
+              <button
+                className="px-5 py-2 rounded-md bg-blue-600 text-white font-semibold ml-4"
+                onClick={() => setShowStaffLogin(true)}
+              >
+                Staff Sign In
               </button>
-            </div>
+            </nav>
 
             {/* Mobile hamburger */}
             <button
@@ -204,12 +217,45 @@ export default function App() {
                 {item}
               </a>
             ))}
-            <button className="mt-2 w-full text-left px-3 py-2 rounded-md bg-amber-300 font-semibold text-sm">
-              Contact us for services
+            <button
+              className="mt-2 w-full text-left px-3 py-2 rounded-md bg-blue-600 font-semibold text-sm text-white"
+              onClick={() => {
+                setShowStaffLogin(true);
+                setMobileOpen(false);
+              }}
+            >
+              Staff Sign In
             </button>
           </div>
         </div>
       </div>
+
+      {/* Staff Sign In Modal */}
+      {showStaffLogin && (
+        <div className="fixed inset-0 z-[999] bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-center">
+            <h2 className="text-xl font-semibold mb-4">Staff Sign In</h2>
+            <GoogleLogin
+              onSuccess={handleStaffLoginSuccess}
+              onError={handleStaffLoginError}
+            />
+            {staffSuccess && (
+              <p className="mt-2 text-green-600 font-medium">
+                Staff login successful! Opening sheet...
+              </p>
+            )}
+            <button
+              className="mt-6 px-4 py-2 rounded bg-gray-200 text-gray-700 font-semibold"
+              onClick={() => {
+                setShowStaffLogin(false);
+                setStaffSuccess(false);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Hero Content (above overlay now) */}
       <div className="absolute left-1/2 transform -translate-x-1/2 top-1/3 w-[90vw] max-w-5xl px-4 text-left text-white z-20">
