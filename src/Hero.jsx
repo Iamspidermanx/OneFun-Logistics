@@ -170,9 +170,7 @@ export default function App() {
         {/* Mobile menu */}
         <div
           id="mobile-menu"
-          className={`md:hidden w-full transition-all duration-300 ease-in-out z-40 ${
-            mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
+          className={`md:hidden w-full transition-all duration-300 ease-in-out ${mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"} `}
           style={{
             position: "fixed",
             left: 0,
@@ -184,6 +182,7 @@ export default function App() {
             overflow: "hidden",
             background: "white",
             boxShadow: mobileOpen ? "0 6px 24px rgba(0,0,0,0.12)" : "none",
+            zIndex: 9999, // Increased z-index for mobile nav
           }}
         >
           <div className="px-3 py-3 flex flex-col gap-2">
@@ -191,8 +190,9 @@ export default function App() {
               <button
                 key={index}
                 onClick={() => handleMenuClick(links[item])}
-                className="py-2 px-3 rounded hover:bg-gray-100 font-medium text-black text-sm text-left"
-                style={{ background: "none", border: "none", outline: "none" }}
+                className="py-2 px-3 rounded font-medium text-black text-sm text-left transition-colors duration-200
+        hover:bg-blue-200 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-700 active:bg-blue-300"
+                style={{ background: "none", border: "none", outline: "none", cursor: "pointer" }}
               >
                 {item}
               </button>
