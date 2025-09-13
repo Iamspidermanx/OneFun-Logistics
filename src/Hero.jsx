@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function App() {
-  const menu = ["Home", "About Us", "Couriers", "Delivery"];
+  const menu = ["Home", "About Us", "Couriers", "Delivery", "Vision"];
   const links = {
-    Home: "#",
-    "About Us": "#",
-    Couriers: "#",
-    Delivery: "#",
+    Home: "/",
+    "About Us": "/about",
+    Couriers: "/courier",
+    Delivery: "/order",
+    Vision: "/vission",
   };
   const list = [
     { icon: "pi-car", text: "Last Mile Deliveries" },
@@ -19,6 +21,8 @@ export default function App() {
   const navRef = useRef(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [navHeight, setNavHeight] = useState(0);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const measure = () => {
@@ -54,6 +58,13 @@ export default function App() {
     }
   }, [isSticky, mobileOpen]);
 
+  // Handle menu navigation
+  const handleMenuClick = (link) => {
+    setMobileOpen(false);
+    navigate(link);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div className="hero h-[150vh] sm:h-[110vh] md:h-[100vh] relative flex flex-col">
       {/* Backgrounds */}
@@ -68,11 +79,11 @@ export default function App() {
         <div className="flex flex-col md:flex-row border-b justify-between px-3 md:px-32">
           <div className="flex flex-wrap items-center gap-2 my-2">
             <i className="pi pi-phone p-1"></i>
-            <p className="text-[12px] md:text-[14px]">+000 123 45 6789</p>
+            <p className="text-[12px] md:text-[14px]">+1 (503) 894-2813</p>
             <span className="hidden md:inline px-2">|</span>
             <i className="pi pi-envelope p-1"></i>
             <p className="text-[12px] md:text-[15px]">
-              OneFunLogistics@gmail.com
+              onefunlogistics@myfunllc.com
             </p>
           </div>
           <div className="flex gap-3 my-2 text-xs md:text-sm">
@@ -129,17 +140,18 @@ export default function App() {
             {/* Nav links */}
             <nav className="hidden md:flex items-center gap-6">
               {menu.map((item, index) => (
-                <a
+                <button
                   key={index}
-                  href={links[item]}
-                  className={`font-medium ${
+                  onClick={() => handleMenuClick(links[item])}
+                  className={`font-medium bg-transparent border-none outline-none cursor-pointer ${
                     isSticky
                       ? "text-black hover:text-blue-600"
                       : "text-white hover:text-blue-300"
                   }`}
+                  style={{ background: "none" }}
                 >
                   {item}
-                </a>
+                </button>
               ))}
             </nav>
 
@@ -176,14 +188,14 @@ export default function App() {
         >
           <div className="px-3 py-3 flex flex-col gap-2">
             {menu.map((item, index) => (
-              <a
+              <button
                 key={index}
-                href={links[item]}
-                onClick={() => setMobileOpen(false)}
-                className="py-2 px-3 rounded hover:bg-gray-100 font-medium text-black text-sm"
+                onClick={() => handleMenuClick(links[item])}
+                className="py-2 px-3 rounded hover:bg-gray-100 font-medium text-black text-sm text-left"
+                style={{ background: "none", border: "none", outline: "none" }}
               >
                 {item}
-              </a>
+              </button>
             ))}
           </div>
         </div>

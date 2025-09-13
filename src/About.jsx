@@ -3,7 +3,44 @@ import { useEffect, useState, useRef } from "react";
 function App() {
   const [isInView, setIsInView] = useState(false);
   const [showFull, setShowFull] = useState(false);
+  const [showUpArrow, setShowUpArrow] = useState(false);
   const sectionRef = useRef(null);
+
+  // Show up arrow when scrolled down
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowUpArrow(window.scrollY > 200);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Intersection observer for animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, []);
+
+  // Scroll to top handler
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Split the paragraph into two parts
   const firstHalf = (
@@ -31,27 +68,6 @@ function App() {
       Thank you for trusting me with your deliveries — I look forward to being your go-to logistics partner.
     </>
   );
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
 
   return (
     <div
@@ -109,6 +125,25 @@ function App() {
             className="max-w-full h-auto"
           />
         </div>
+      )}
+
+      {/* Up Arrow Button */}
+      {showUpArrow && (
+        <button
+          onClick={handleScrollTop}
+          className="fixed bottom-8 right-8 z-50 bg-blue-600 hover:bg-blue-800 text-white rounded-full p-3 shadow-lg transition"
+          aria-label="Scroll to top"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+          </svg>
+        </button>
       )}
     </div>
   );

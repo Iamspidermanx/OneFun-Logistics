@@ -12,6 +12,20 @@
   /* No opacity or animation here! */
 }
 
+.vision {
+  background-blend-mode: overlay;
+  background-color: rgba(0, 0, 0, 0.545);
+  background-image: url(/assets/truck.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  /* No opacity or animation here! */
+}
+
 /* The slider images as absolutely positioned backgrounds */
 .hero-bg {
   position: absolute;

@@ -8,6 +8,7 @@ import About from "./About.jsx";
 import Courier from "./Courier.jsx";
 import Delivery from "./Delivery.jsx";
 import Footer from "./Footer.jsx";
+import Vission from "./Vission.jsx";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -20,8 +21,20 @@ function LandingPage() {
     <>
       <Hero />
       <About />
+      <Vission />
       <Courier />
       <Delivery />
+      <Footer />
+    </>
+  );
+}
+
+// Page layout with navigation and footer
+function PageLayout({ children }) {
+  return (
+    <>
+      <Hero />
+      {children}
       <Footer />
     </>
   );
@@ -34,9 +47,46 @@ createRoot(document.getElementById("root")).render(
         <Routes>
           {/* Landing page */}
           <Route path="/" element={<LandingPage />} />
-          
-          {/* Keep /order route if you want a separate form page */}
-          <Route path="/order" element={<Delivery />} />
+
+          {/* About page with nav and footer */}
+          <Route
+            path="/about"
+            element={
+              <PageLayout>
+                <About />
+              </PageLayout>
+            }
+          />
+
+          {/* Vission page with nav and footer */}
+          <Route
+            path="/vission"
+            element={
+              <PageLayout>
+                <Vission />
+              </PageLayout>
+            }
+          />
+
+          {/* Courier page with nav and footer */}
+          <Route
+            path="/courier"
+            element={
+              <PageLayout>
+                <Courier />
+              </PageLayout>
+            }
+          />
+
+          {/* Delivery page with nav and footer */}
+          <Route
+            path="/order"
+            element={
+              <PageLayout>
+                <Delivery />
+              </PageLayout>
+            }
+          />
         </Routes>
       </Router>
     </GoogleOAuthProvider>

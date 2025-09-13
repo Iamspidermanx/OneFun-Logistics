@@ -15,7 +15,7 @@ export default function Courier() {
     bio: `Asagade has over 2 years of experience in last-mile delivery and logistics. He is known for his reliability, attention to detail, and friendly customer service. Asagade ensures every package is delivered safely and on time.`,
     stats: {
       deliveries: 150,
-      years: 8,
+      years: 2,
       rating: 4.9,
     },
   };
