@@ -9,6 +9,8 @@ import Courier from "./Courier.jsx";
 import Delivery from "./Delivery.jsx";
 import Footer from "./Footer.jsx";
 import Vission from "./Vission.jsx";
+import CourierUpdate from "./CourierUpdate.jsx";
+import Tracking from "./Tracking.jsx";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
@@ -40,55 +42,85 @@ function PageLayout({ children }) {
   );
 }
 
+function AppFontWrapper({ children }) {
+  return (
+    <div style={{ fontFamily: "Poppins, sans-serif" }}>
+      {children}
+    </div>
+  );
+}
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
-      <Router>
-        <Routes>
-          {/* Landing page */}
-          <Route path="/" element={<LandingPage />} />
+      <AppFontWrapper>
+        <Router>
+          <Routes>
+            {/* Landing page */}
+            <Route path="/" element={<LandingPage />} />
 
-          {/* About page with nav and footer */}
-          <Route
-            path="/about"
-            element={
-              <PageLayout>
-                <About />
-              </PageLayout>
-            }
-          />
+            {/* About page with nav and footer */}
+            <Route
+              path="/about"
+              element={
+                <PageLayout>
+                  <About />
+                </PageLayout>
+              }
+            />
 
-          {/* Vission page with nav and footer */}
-          <Route
-            path="/vission"
-            element={
-              <PageLayout>
-                <Vission />
-              </PageLayout>
-            }
-          />
+            {/* Vission page with nav and footer */}
+            <Route
+              path="/vission"
+              element={
+                <PageLayout>
+                  <Vission />
+                </PageLayout>
+              }
+            />
 
-          {/* Courier page with nav and footer */}
-          <Route
-            path="/courier"
-            element={
-              <PageLayout>
-                <Courier />
-              </PageLayout>
-            }
-          />
+            {/* Courier page with nav and footer */}
+            <Route
+              path="/courier"
+              element={
+                <PageLayout>
+                  <Courier />
+                </PageLayout>
+              }
+            />
 
-          {/* Delivery page with nav and footer */}
-          <Route
-            path="/order"
-            element={
-              <PageLayout>
-                <Delivery />
-              </PageLayout>
-            }
-          />
-        </Routes>
-      </Router>
+            {/* Delivery page with nav and footer */}
+            <Route
+              path="/order"
+              element={
+                <PageLayout>
+                  <Delivery />
+                </PageLayout>
+              }
+            />
+
+            {/* Courier update page with nav and footer */}
+            <Route
+              path="/courier-update"
+              element={
+                <PageLayout>
+                  <CourierUpdate />
+                </PageLayout>
+              }
+            />
+
+            {/* Tracking page with nav and footer */}
+            <Route
+              path="/track/:trackingId"
+              element={
+                <PageLayout>
+                  <Tracking />
+                </PageLayout>
+              }
+            />
+          </Routes>
+        </Router>
+      </AppFontWrapper>
     </GoogleOAuthProvider>
   </StrictMode>
 );

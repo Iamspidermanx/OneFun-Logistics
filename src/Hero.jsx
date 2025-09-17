@@ -191,7 +191,7 @@ export default function App() {
                 key={index}
                 onClick={() => handleMenuClick(links[item])}
                 className="py-2 px-3 rounded font-medium text-black text-sm text-left transition-colors duration-200
-        hover:bg-blue-200 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-700 active:bg-blue-300"
+              hover:bg-blue-200 hover:text-blue-700 focus:bg-blue-100 focus:text-blue-700 active:bg-blue-300"
                 style={{ background: "none", border: "none", outline: "none", cursor: "pointer" }}
               >
                 {item}
