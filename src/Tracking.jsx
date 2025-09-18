@@ -10,7 +10,7 @@ const defaultCenter = { lat: 37.0902, lng: -95.7129 };
 
 const mapContainerStyle = {
   width: "100%",
-  height: "300px",
+  height: "300px", // small devices default
   borderRadius: "0.75rem",
 };
 
@@ -32,7 +32,6 @@ export default function TrackingPage() {
     libraries: LIBRARIES,
   });
 
-  // Fetch order data
   const fetchTrackingData = async (id) => {
     try {
       const res = await fetch(`${APPS_SCRIPT_URL}?trackingId=${id}`);
@@ -68,14 +67,14 @@ export default function TrackingPage() {
     }
   }, [orderData, trackingId]);
 
-  // Place markers & draw route
+  // Markers & route
   useEffect(() => {
     if (!isLoaded || !mapRef.current || !orderData) return;
 
     const { latitude, longitude, Address, Dropoff } = orderData;
     const { AdvancedMarkerElement } = window.google.maps.marker;
 
-    // Clear existing markers
+    // Clear markers
     Object.values(markersRef.current).forEach((m) => (m.map = null));
     markersRef.current = {};
 
@@ -90,7 +89,7 @@ export default function TrackingPage() {
     const directionsRenderer = new window.google.maps.DirectionsRenderer({
       suppressMarkers: true,
       polylineOptions: {
-        strokeColor: "#2563eb", // Indigo line
+        strokeColor: "#2563eb",
         strokeWeight: 5,
       },
     });
@@ -101,18 +100,16 @@ export default function TrackingPage() {
     let dropoffLoc = null;
     let courierLoc = null;
 
-    // Courier marker
     if (latitude && longitude) {
       courierLoc = { lat: parseFloat(latitude), lng: parseFloat(longitude) };
       markersRef.current.courier = new AdvancedMarkerElement({
         position: courierLoc,
         map: mapRef.current,
         title: "Courier",
-        content: createIcon("🚚"), // custom icon
+        content: createIcon("🚚"),
       });
     }
 
-    // Geocode pickup
     if (Address) {
       geocoder.geocode({ address: Address }, (results, status) => {
         if (status === "OK" && results[0]) {
@@ -128,7 +125,6 @@ export default function TrackingPage() {
       });
     }
 
-    // Geocode dropoff
     if (Dropoff) {
       geocoder.geocode({ address: Dropoff }, (results, status) => {
         if (status === "OK" && results[0]) {
@@ -144,13 +140,10 @@ export default function TrackingPage() {
       });
     }
 
-    // Helper: draw route when all available
     const maybeDrawRoute = () => {
       if (!pickupLoc || !dropoffLoc) return;
 
-      const waypoints = courierLoc
-        ? [{ location: courierLoc, stopover: true }]
-        : [];
+      const waypoints = courierLoc ? [{ location: courierLoc, stopover: true }] : [];
 
       directionsService.route(
         {
@@ -168,7 +161,6 @@ export default function TrackingPage() {
     };
   }, [isLoaded, orderData]);
 
-  // Custom emoji marker
   const createIcon = (emoji) => {
     const div = document.createElement("div");
     div.style.fontSize = "24px";
@@ -191,89 +183,72 @@ export default function TrackingPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start py-16 px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-center text-indigo-700 mb-6">
+    <div className="min-h-screen flex flex-col items-center justify-start py-8 px-2 sm:px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-4 sm:p-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-center text-indigo-700 mb-4 sm:mb-6">
           📦 Track Your Package
         </h1>
 
         {/* Tracking Input */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex flex-col sm:flex-row gap-2 mb-4 sm:mb-6">
           <input
             type="text"
             placeholder="Enter Tracking ID"
             value={trackingId}
             onChange={(e) => setTrackingId(e.target.value)}
-            className="flex-1 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-300"
+            className="flex-1 p-3 border rounded-xl focus:ring-2 focus:ring-indigo-300 text-sm sm:text-base"
           />
           <button
             onClick={handleTrack}
             disabled={loading}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50"
+            className="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 disabled:opacity-50 text-sm sm:text-base"
           >
             {loading ? "Searching..." : "Track"}
           </button>
         </div>
 
-        {/* Error */}
         {errorMsg && <p className="text-red-600 text-center mb-4">{errorMsg}</p>}
 
         {/* Order Data */}
         {orderData && (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <p className="text-gray-600">Tracking ID</p>
-              <p className="font-semibold">{orderData["Tracking Number"]}</p>
-            </div>
-            <div className="flex justify-between items-center">
-              <p className="text-gray-600">Name</p>
-              <p className="font-semibold">{orderData["Full Name"]}</p>
-            </div>
-            <div className="flex justify-between items-center">
-              <p className="text-gray-600">Email</p>
-              <p className="font-semibold">{orderData.Email}</p>
-            </div>
-            <div className="flex justify-between items-center">
-              <p className="text-gray-600">Phone</p>
-              <p className="font-semibold">{orderData.Phone}</p>
-            </div>
-            <div>
-              <p className="text-gray-600">Pickup Address</p>
-              <p className="font-semibold">{orderData.Address}</p>
-            </div>
-            <div>
-              <p className="text-gray-600">Dropoff Address</p>
-              <p className="font-semibold">{orderData.Dropoff}</p>
-            </div>
-            <div>
-              <p className="text-gray-600">Package Description</p>
-              <p className="font-semibold">{orderData["Package Description"]}</p>
-            </div>
-            <div className="flex justify-between items-center">
-              <p className="text-gray-600">Status</p>
-              <span
-                className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
-                  orderData.Orderstatus || "Pending"
-                )}`}
-              >
-                {orderData.Orderstatus || "Pending"}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <p className="text-gray-600">Last Updated</p>
-              <p className="font-semibold">{orderData.Timestamp}</p>
-            </div>
+          <div className="space-y-3 sm:space-y-4 text-sm sm:text-base">
+            {Object.entries({
+              "Tracking ID": orderData["Tracking Number"],
+              Name: orderData["Full Name"],
+              Email: orderData.Email,
+              Phone: orderData.Phone,
+              "Pickup Address": orderData.Address,
+              "Dropoff Address": orderData.Dropoff,
+              "Package Description": orderData["Package Description"],
+              Status: orderData.Orderstatus || "Pending",
+              "Last Updated": orderData.Timestamp,
+            }).map(([key, value]) => (
+              <div key={key} className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <p className="text-gray-600">{key}</p>
+                {key === "Status" ? (
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium mt-1 sm:mt-0 ${getStatusColor(
+                      value
+                    )}`}
+                  >
+                    {value}
+                  </span>
+                ) : (
+                  <p className="font-semibold mt-1 sm:mt-0">{value}</p>
+                )}
+              </div>
+            ))}
 
             {/* Google Map */}
-            <div className="mt-6 w-full rounded-xl overflow-hidden">
+            <div className="mt-4 sm:mt-6 w-full rounded-xl overflow-hidden">
               {isLoaded ? (
                 <GoogleMap
-                  mapContainerStyle={mapContainerStyle}
+                  mapContainerStyle={{ ...mapContainerStyle, height: "300px", sm: { height: "400px" } }}
                   zoom={5}
                   center={defaultCenter}
                   onLoad={(map) => (mapRef.current = map)}
                   options={{
-                    mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID, // ✅ must be valid
+                    mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID,
                     zoomControl: true,
                     streetViewControl: false,
                     mapTypeControl: false,
