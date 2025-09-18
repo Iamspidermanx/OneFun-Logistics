@@ -14,10 +14,9 @@ import Tracking from "./Tracking.jsx";
 
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
-// ✅ Use Vite env variable
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-// Landing page component
+// Landing page
 function LandingPage() {
   return (
     <>
@@ -31,7 +30,7 @@ function LandingPage() {
   );
 }
 
-// Page layout with navigation and footer
+// Layout wrapper for nav + footer
 function PageLayout({ children }) {
   return (
     <>
@@ -42,12 +41,9 @@ function PageLayout({ children }) {
   );
 }
 
+// Font wrapper
 function AppFontWrapper({ children }) {
-  return (
-    <div style={{ fontFamily: "Poppins, sans-serif" }}>
-      {children}
-    </div>
-  );
+  return <div style={{ fontFamily: "Poppins, sans-serif" }}>{children}</div>;
 }
 
 createRoot(document.getElementById("root")).render(
@@ -59,65 +55,15 @@ createRoot(document.getElementById("root")).render(
             {/* Landing page */}
             <Route path="/" element={<LandingPage />} />
 
-            {/* About page with nav and footer */}
-            <Route
-              path="/about"
-              element={
-                <PageLayout>
-                  <About />
-                </PageLayout>
-              }
-            />
+            {/* Pages with layout */}
+            <Route path="/about" element={<PageLayout><About /></PageLayout>} />
+            <Route path="/vission" element={<PageLayout><Vission /></PageLayout>} />
+            <Route path="/courier" element={<PageLayout><Courier /></PageLayout>} />
+            <Route path="/order" element={<PageLayout><Delivery /></PageLayout>} />
+            <Route path="/courier-update" element={<PageLayout><CourierUpdate /></PageLayout>} />
 
-            {/* Vission page with nav and footer */}
-            <Route
-              path="/vission"
-              element={
-                <PageLayout>
-                  <Vission />
-                </PageLayout>
-              }
-            />
-
-            {/* Courier page with nav and footer */}
-            <Route
-              path="/courier"
-              element={
-                <PageLayout>
-                  <Courier />
-                </PageLayout>
-              }
-            />
-
-            {/* Delivery page with nav and footer */}
-            <Route
-              path="/order"
-              element={
-                <PageLayout>
-                  <Delivery />
-                </PageLayout>
-              }
-            />
-
-            {/* Courier update page with nav and footer */}
-            <Route
-              path="/courier-update"
-              element={
-                <PageLayout>
-                  <CourierUpdate />
-                </PageLayout>
-              }
-            />
-
-            {/* Tracking page with nav and footer */}
-            <Route
-              path="/track/:trackingId"
-              element={
-                <PageLayout>
-                  <Tracking />
-                </PageLayout>
-              }
-            />
+            {/* Dynamic tracking route */}
+            <Route path="/track/:trackingId" element={<PageLayout><Tracking /></PageLayout>} />
           </Routes>
         </Router>
       </AppFontWrapper>
